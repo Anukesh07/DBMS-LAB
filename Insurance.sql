@@ -1,72 +1,66 @@
 create database cs038;
 use cs038;
-create table Person(
-driver_id varchar(20),
-names varchar(20),
-address varchar(20),
-primary key(driver_id)
+
+create table person (
+driverid varchar(10),
+name varchar(20),
+address varchar(50),
+primary key(driverid)
 );
-create table Car(
-reg_num varchar(20),
-model varchar(20),
+
+create table car (
+regno varchar(10),
+model varchar(10),
 year int,
-primary key(reg_num)
+primary key(regno)
 );
-create table Owns(
-driver_id varchar(20),
-reg_num varchar(20),
-primary key(driver_id,reg_num),
-foreign key(driver_id) references Person(driver_id),
-foreign key(reg_num) references Car(reg_num)
+
+create table accident (
+reportno varchar(10),
+accidentdate int,
+location varchar(100),
+primary key(reportno)
 );
-create table Accident(
-report_num int,
-accident_date varchar(20),
-location varchar(20),
-primary key(report_num)
+
+create table owns (
+driverid varchar(10),
+regno varchar(10),
+primary key(driverid,regno),
+foreign key(driverid) references person (driverid)
 );
-create table Participated(
-driver_id varchar(20),
-reg_num varchar(20),
-report_num int,
-damage_amount int,
-primary key (driver_id,reg_num,report_num),
-foreign key(driver_id) references Person(driver_id),
-foreign key(reg_num) references Car(reg_num),
-foreign key(report_num) references Accident(report_num)
+
+create table participated (
+driverid varchar(10),
+regno varchar(10),
+reportno varchar(10),
+damageamount int, 
+primary key (driverid,regno,reportno),
+foreign key(driverid) references person (driverid),
+foreign key(regno) references car (regno),
+foreign key(reportno) references accident (reportno)
 );
-insert into Person
-values
-("A01","Richard","Srinivas Nagar"),
-("A02","Pradeep","Rajajinagar"),
-("A03","Smith","Ashok Nagar"),
-("A04","John","N R Colony"),
-("A05","Venu","Hanumanth Nagar");
-insert into Car
-values
-("KA052250","Lancer",1990),
-("KA031181","Indica",1957),
-("KA095477","Toyota",1998),
-("KA053408","Honda",2008),
-("KA041702","Audi",2005);
-insert into Owns
-values
-("A01","KA052250"),
-("A02","KA053408"),
-("A03","KA031181"),
-("A04","KA095477"),
-("A05","KA041702");
-insert into Accident
-values
-(11,"01-JAN-03","Mysore Road"),
-(12,"02-FEB-04","South end circle"),
-(13,"21-JAN-03","Bull temple road"),
-(14,"17-FEB-08","Mysore road"),
-(15,"04-MAR-05","kanakpura Raod");
-insert into Participated
-values
-("A01","KA052250",11,10000),
-("A02","KA053408",12,50000),
-("A03","KA031181",13,25000),
-("A04","KA095477",14,3000),
-("A05","KA041702",15,5000);
+
+insert into person values ("001","abc","Blore North"),("002","wxy","Blore South"),
+("003","pqr","Blore Urban"),("004","mno","Blore Rural"),("005","hij","Blore Central");
+
+insert into car values ("KA0001","abc",2011),("KA0002","lexus",2005),("KA0003","mazda",2009),
+("KA0004","dc",2016),("KA0005","lotus",2019);
+
+insert into owns values ("001","KA0001"),("002","KA0002"),("003","KA0003"),("004","KA0004"),("005","KA0005");
+
+insert into accident values ("11",01-11-00,"kh road"),("22",02-04-10,"kr road"),
+("33",03-08-12,"mysore road"),("44",04-03-16,"magadi road"),("55",05-10-19,"kolar road");
+
+insert into participated values ("001","KA0001","11",10000),("002","KA0002","22",25000),
+("003","KA0003","33",30000),("004","KA0004","44",40000),("005","KA0005","55",50000);
+
+select * from person;
+select * from car;
+select * from owns;
+select * from accident;
+select * from participated;
+
+update participated set damageamount = 25000 where regno = "KA0001" and reportno = "11";
+insert into accident values ("15",22-03-2000,"CR road");
+select count(distinct driverid) from participated,accident where participated.reportno = accident.reportno and accidentdate like '%00';
+select count(participated.reportno) as count from participated,car where participated.regno = car.regno and car.model = 'mazda'; 
