@@ -1,66 +1,64 @@
 create database cs038;
 use cs038;
 
-create table person (
-driverid varchar(10),
-name varchar(20),
-address varchar(50),
-primary key(driverid)
-);
-
-create table car (
-regno varchar(10),
-model varchar(10),
-year int,
-primary key(regno)
-);
-
-create table accident (
-reportno varchar(10),
-accidentdate int,
-location varchar(100),
-primary key(reportno)
-);
-
-create table owns (
-driverid varchar(10),
-regno varchar(10),
-primary key(driverid,regno),
-foreign key(driverid) references person (driverid)
-);
-
-create table participated (
-driverid varchar(10),
-regno varchar(10),
-reportno varchar(10),
-damageamount int, 
-primary key (driverid,regno,reportno),
-foreign key(driverid) references person (driverid),
-foreign key(regno) references car (regno),
-foreign key(reportno) references accident (reportno)
-);
-
-insert into person values ("001","abc","Blore North"),("002","wxy","Blore South"),
-("003","pqr","Blore Urban"),("004","mno","Blore Rural"),("005","hij","Blore Central");
-
-insert into car values ("KA0001","abc",2011),("KA0002","lexus",2005),("KA0003","mazda",2009),
-("KA0004","dc",2016),("KA0005","lotus",2019);
-
-insert into owns values ("001","KA0001"),("002","KA0002"),("003","KA0003"),("004","KA0004"),("005","KA0005");
-
-insert into accident values ("11",01-11-00,"kh road"),("22",02-04-10,"kr road"),
-("33",03-08-12,"mysore road"),("44",04-03-16,"magadi road"),("55",05-10-19,"kolar road");
-
-insert into participated values ("001","KA0001","11",10000),("002","KA0002","22",25000),
-("003","KA0003","33",30000),("004","KA0004","44",40000),("005","KA0005","55",50000);
-
+create table person(
+driver_id varchar(30),
+name varchar(30),
+address varchar(100),
+PRIMARY KEY(driver_id));
+insert into person values('a01','richard','srinivas nagar'),('a02','pradeep','rajaji nagar'),('a03','smith','ashok nagar'),('a04','venu','n r colony'),('a05','jhon','hanumanth nagar'); 
 select * from person;
+create table car(
+reg_num varchar(30),
+model varchar(30),
+year int,
+PRIMARY KEY(reg_num)
+);
+insert into car values('ka052250','indica',1990),('ka031181','lancer',1957),('ka095477','toyota',1998),('ka053408','honda',2008),('ka041702','audi',2005);
 select * from car;
+create table owns(
+driver_id varchar(30),
+reg_num varchar(30),
+FOREIGN KEY(driver_id) REFERENCES person(driver_id),
+FOREIGN KEY(reg_num) REFERENCES car(reg_num)
+);
+insert into owns values('a01','ka052250'),('a02','ka053408'),('a03','ka031181'),('a04','ka095477'),('a05','ka041702');
 select * from owns;
+create table accident(
+report_num int,
+accident_date date,
+location varchar(30),
+PRIMARY KEY(report_num)
+);
+insert into accident values(11,'2003-01-01','mysore road'),(12,'2004-02-02','south end circle'),(13,'2003-01-21','bull temple road'),(14,'2008-02-17','mysore road'),(15,'2005-03-04','kanakapura road');
 select * from accident;
+create table participated(
+driver_id varchar(30),
+reg_num varchar(30),
+report_num int,
+damage_amount int,
+PRIMARY KEY(report_num),
+FOREIGN KEY(driver_id) REFERENCES person(driver_id),
+FOREIGN KEY(reg_num) REFERENCES car(reg_num),
+FOREIGN KEY(report_num) REFERENCES accident(report_num)
+);
+insert into participated values('a01','ka052250',11,10000),('a02','ka053408',12,50000),('a03','ka095477',13,25000),('a04','ka031181',14,3000),('a05','ka041702',15,5000);
 select * from participated;
 
-update participated set damageamount = 25000 where regno = "KA0001" and reportno = "11";
-insert into accident values ("15",22-03-2000,"CR road");
-select count(distinct driverid) from participated,accident where participated.reportno = accident.reportno and accidentdate like '%00';
-select count(participated.reportno) as count from participated,car where participated.regno = car.regno and car.model = 'mazda'; 
+
+
+use csedb1_1bm18cs045;
+update participated
+SET damage_amount=25000
+WHERE report_num=12 AND reg_num='ka053408';
+select * from participated;
+delete from accident
+WHERE report_num=20;
+select * from accident;
+select count(distinct driver_id)
+FROM accident,participated
+WHERE accident.report_num=participated.report_num
+AND accident_date LIKE '2008%';
+select count(distinct model)
+FROM car,accident,participated
+WHERE participated.reg_num=car.reg_num;
