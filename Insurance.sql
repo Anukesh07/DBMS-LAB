@@ -44,10 +44,6 @@ FOREIGN KEY(report_num) REFERENCES accident(report_num)
 );
 insert into participated values('a01','ka052250',11,10000),('a02','ka053408',12,50000),('a03','ka095477',13,25000),('a04','ka031181',14,3000),('a05','ka041702',15,5000);
 select * from participated;
-
-
-
-use csedb1_1bm18cs045;
 update participated
 SET damage_amount=25000
 WHERE report_num=12 AND reg_num='ka053408';
