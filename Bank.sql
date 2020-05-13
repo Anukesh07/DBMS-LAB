@@ -81,7 +81,7 @@ having count(D.customername) >=2);
                 
 select BC.customername from Bank_Customer BC
 where not exists(
-					select branch_name from Branch branch_city = 'Delhi'
+					select branch_name from Branch where branch_city = 'Delhi'
                     AND branch_name NOT IN
                     (select BA.branch_name from Depositor D , Bank_account BA
                     where D.acc_no = BA.acc_no AND BC.customername = D.customername));
