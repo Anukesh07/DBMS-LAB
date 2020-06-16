@@ -1,56 +1,41 @@
-create table customer( cust_no int,
-cname varchar(20), city varchar(20), primary key(cust_no));
+CREATE DATABASE C;
+USE C;
+CREATE TABLE SALESMAN
+(SALESMAN_ID INT,
+NAME VARCHAR(20),
+CITY VARCHAR(20),
+COMMISSION VARCHAR(20),
+PRIMARY KEY (SALESMAN_ID));
+CREATE TABLE CUSTOMER
+(CUSTOMER_ID INT,
+CUST_NAME VARCHAR(20),
+CITY VARCHAR(20),
+GRADE INT,
+SALESMAN_ID INT,
+PRIMARY KEY(CUSTOMER_ID),
+FOREIGN KEY(SALESMAN_ID) REFERENCES SALESMAN (SALESMAN_ID) ON DELETE SET NULL);
+CREATE TABLE ORDERS
+(ORD_NO INT,
+PURCHASE_AMT INT,
+ORD_DATE VARCHAR(20),
+CUSTOMER_ID INT,
+SALESMAN_ID INT,
+PRIMARY KEY (ORD_NO),
+FOREIGN KEY(CUSTOMER_ID) REFERENCES CUSTOMER(CUSTOMER_ID) ON DELETE CASCADE,
+FOREIGN KEY(SALESMAN_ID) REFERENCES SALESMAN(SALESMAN_ID) ON DELETE CASCADE);
 
-create table orders( order_no int,
-odate date, cust_no int, ord_amt int,
-primary key(order_no),
-foreign key(cust_no) references customer(cust_no));
-
-
-create table item( item_no int, unit_price int,
-primary key(item_no));
-
-
-create table order_item( order_no int,
-item_no int , qty int,
- 
-foreign key(order_no) references orders(order_no),
-foreign key(item_no) references item(item_no) on delete set NULL);
-
-
-create table warehouse( warehouse_no int,
-city varchar(20),
-primary key(warehouse_no));
-
-
-create table shipment( order_no int, warehouse_no int, shit_date date,
-foreign key(order_no) references orders(order_no),
-foreign key(warehouse_no) references warehouse(warehouse_no));
-
-
-insert into customer values('&cust_no', '&cname', '&city'); select * from customer;
-
-insert into orders values('&order_no', '&odate',' &cust_no', '&ord_amt'); select * from orders;
-
-insert into item values('&item_no',' &unit_price'); select *from item;
-
-insert into order_item values('&order_no', '&item_no',' &qty'); select *from order_item;
-
-insert into warehouse values('&warehouse_no', '&city');
- 
-select *from warehouse;
-
-
-insert into shipment values('&order_no', '&warehouse_no', '&shit_date'); select * from shipment;
-
-select C.cname, count(*) as NO_OF_ORDERS, avg(O.ord_amt) as AVG_ORDER_AMT
-from customer C, orders O
-where (C.cust_no = O.cust_no) group by cname;
-
-
-select * from orders where order_no in (
-select order_no from shipment where warehouse_no in (
-select warehouse_no from warehouse where city='bangalore'));
-
-
-delete from item where item_no = 10;
+INSERT INTO SALESMAN VALUES (1000, 'JOHN','BANGALORE','25%');
+INSERT INTO SALESMAN VALUES (2000, 'RAVI','BANGALORE','20%');
+INSERT INTO SALESMAN VALUES (3000, 'KUMAR','MYSORE','15 %');
+INSERT INTO SALESMAN VALUES (4000, 'SMITH','DELHI','30 %');
+INSERT INTO SALESMAN VALUES (5000, 'HARSHA','HYDRABAD','15%');
+INSERT INTO CUSTOMER VALUES (10, 'PREETHI','BANGALORE', 100, 1000);
+INSERT INTO CUSTOMER VALUES (11, 'VIVEK','MANGALORE', 300, 1000);
+INSERT INTO CUSTOMER VALUES (12, 'BHASKAR','CHENNAI', 400, 2000);
+INSERT INTO CUSTOMER VALUES (13, 'CHETHAN','BANGALORE', 200, 2000);
+INSERT INTO CUSTOMER VALUES (14, 'MAMATHA','BANGALORE', 400, 3000);
+INSERT INTO ORDERS VALUES (50, 5000, '04-MAY-17', 10, 1000);
+INSERT INTO ORDERS VALUES (51, 450, '20-JAN-17', 10, 2000);
+INSERT INTO ORDERS VALUES (52, 1000, '24-FEB-17', 13, 2000);
+INSERT INTO ORDERS VALUES (53, 3500, '13-APR-17', 14, 3000);
+INSERT INTO ORDERS VALUES (54, 550, '09-MAR-17', 12, 2000); 
